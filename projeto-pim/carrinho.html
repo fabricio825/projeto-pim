@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cyber - Carrinho</title>
+    <link rel="stylesheet" href="carrinho-style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">cyber</div>
+        <nav><a href="index.html">Pagina inicial</a></nav>
+        <div class="icons">
+            <a href="carrinho.html" style="text-decoration:none; color:#000;">🛒</a>
+            <span>👤</span>
+        </div>
+    </header>
+
+    <main class="container cart-page">
+        <section class="cart-items">
+            <h2>Carrinho de Compras</h2>
+            <div id="lista-carrinho">
+            </div>
+        </section>
+
+        <section class="summary-box">
+            <h3>Resumo do Pedido</h3>
+            
+            <div class="coupon">
+                <label>Código de Desconto</label>
+                <div class="coupon-input">
+                    <input type="text" id="cupom-input" placeholder="Digite o código">
+                    <button onclick="aplicarDesconto()">Aplicar</button>
+                </div>
+                <p id="cupom-msg" style="font-size: 12px; margin-top: 8px; font-weight: 500;"></p>
+            </div>
+
+            <div class="row">
+                <span>Subtotal</span>
+                <span id="sub-val">R$ 0,00</span>
+            </div>
+            <div class="row">
+                <span>Frete</span>
+                <span>R$ 149,42</span>
+            </div>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+            <div class="row final">
+                <span>Total</span>
+                <b id="total-val">R$ 0,00</b>
+            </div>
+            <button class="btn-checkout">Finalizar compra</button>
+        </section>
+    </main>
+
+    <footer class="footer-preto">
+        <div class="footer-content">
+            <div class="footer-logo">cyber</div>
+            <p>Distribuidora de alta performance em São Paulo.</p>
+        </div>
+    </footer>
+
+    <script src="db.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const produtoId = params.get('id');
+        const p = meusProdutos.find(item => item.id == produtoId);
+        
+        let descontoAplicado = false;
+        const frete = 149.42;
+
+        if (p) {
+            document.getElementById('lista-carrinho').innerHTML = `
+                <div class="cart-item">
+                    <img src="${p.imagens[0]}" alt="${p.nome}" style="width: 100px; mix-blend-mode: multiply;">
+                    <div class="item-info">
+                        <h4>${p.nome}</h4>
+                        <p style="color: #888; font-size: 12px;">Ref: ${p.id}</p>
+                    </div>
+                    <div class="qty">
+                        <span style="cursor:pointer">−</span> 
+                        <span style="margin: 0 10px;">1</span> 
+                        <span style="cursor:pointer">+</span>
+                    </div>
+                    <p class="item-p">R$ ${p.preco.toLocaleString('pt-br', { minimumFractionDigits: 2 })}</p>
+                    <b style="cursor:pointer; color: #ff4d4d;">✕</b>
+                </div>
+            `;
+
+            atualizarValores(p.preco);
+        }
+
+        function atualizarValores(subtotal, desconto = 0) {
+            const total = (subtotal - desconto) + frete;
+            document.getElementById('sub-val').innerText = `R$ ${subtotal.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`;
+            document.getElementById('total-val').innerText = `R$ ${total.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`;
+        }
+
+        function aplicarDesconto() {
+            const input = document.getElementById('cupom-input').value.toUpperCase();
+            const msg = document.getElementById('cupom-msg');
+            
+            if (!p) return;
+
+            // Se o código for CYBER10, aplica 10% de desconto
+            if (input === "CYBER10") {
+                if (descontoAplicado) {
+                    msg.innerText = "Este cupom já foi utilizado.";
+                    msg.style.color = "#ffa500"; 
+                    return;
+                }
+
+                const valorDesconto = p.preco * 0.10;
+                atualizarValores(p.preco, valorDesconto);
+                
+                msg.innerText = "Cupom aplicado com sucesso! (10% OFF)";
+                msg.style.color = "#28a745"; 
+                descontoAplicado = true;
+            } else {
+                
+                msg.innerText = "Código promocional inválido";
+                msg.style.color = "#dc3545"; 
+            }
+        }
+    </script>
+</body>
+</html>

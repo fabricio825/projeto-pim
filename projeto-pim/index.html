@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cyber - Home</title>
+    <link rel="stylesheet" href="index-style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">cyber</div>
+        
+        <div class="search-container">
+            <input type="text" id="inputBusca" placeholder="O que você está procurando?" onkeyup="filtrar()">
+            <button>🔍</button>
+        </div>
+
+        <nav>
+            <a href="index.html">Pagina inicial</a>
+            <a href="#">sobre-nos</a>
+            <a href="#">Contato</a>
+        </nav>
+
+        <div class="icons">
+            <a href="carrinho.html" style="text-decoration:none; color:#000;">🛒</a>
+            <span>👤</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="top-bar">
+            <span>Produtos Selecionados: <b id="contador">0</b></span>
+            
+            <select id="selectOrdem" class="sort-select" onchange="ordenar()">
+                <option value="maior">Maior Preço</option>
+                <option value="menor">Menor Preço</option>
+                <option value="az">A - Z</option>
+            </select>
+        </div>
+
+        <section id="gridProdutos" class="grid-produtos"></section>
+    </main>
+
+    <footer class="footer-preto">
+        <div class="footer-content">
+            <div class="footer-logo">cyber</div>
+            <p>Somos uma distribuidora especializada em tecnologia de alta performance localizada em São Paulo. Nosso showroom exclusivo oferece uma edição limitada de equipamentos eletrônicos topo de linha para profissionais de ADS e entusiastas.</p>
+            <div class="social-icons">
+                <span>🐦</span> 
+                <span>f</span> 
+                <span>i</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="db.js"></script>
+    <script src="script-home.js"></script>
+</body>
+</html>

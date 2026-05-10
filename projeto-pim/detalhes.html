@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber - Detalhes do Produto</title>
+    <link rel="stylesheet" href="detalhesstyle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="logo">cyber</div>
+        
+        <div class="search-container">
+            <input type="text" id="inputBusca" placeholder="O que você está procurando?">
+            <button type="submit">🔍</button>
+        </div>
+
+        <nav>
+            <a href="index.html">Pagina inicial</a>
+            <a href="#">sobre-nos</a>
+            <a href="#">Contato</a>
+        </nav>
+
+        <div class="icons">
+            <a href="carrinho.html">🛒</a> 
+            <span style="cursor:pointer;">👤</span>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <nav class="breadcrumbs">
+            Home > Catalogo > Notebooks > <span id="bread-nome">Produto</span>
+        </nav>
+
+        <section class="product-top">
+            
+            <div class="gallery">
+                <div class="thumbs" id="thumbs">
+                   
+                </div>
+                <div class="main-img-box">
+                    <img id="main-img" src="" alt="Imagem Principal">
+                </div>
+            </div>
+
+            
+            <div class="info-box">
+                <h1 id="prod-nome">Carregando...</h1>
+                <p class="price" id="prod-preco">---</p>
+
+                <div class="specs-grid">
+                    <div class="spec-card">
+                        <span>TAMANHO DA TELA</span>
+                        <b id="spec-tela">-</b>
+                    </div>
+                    <div class="spec-card">
+                        <span>CPU</span>
+                        <b id="spec-cpu">-</b>
+                    </div>
+                    <div class="spec-card">
+                        <span>NÚCLEOS</span>
+                        <b id="spec-cores">-</b>
+                    </div>
+                    <div class="spec-card">
+                        <span>PLACA DE VÍDEO</span>
+                        <b id="spec-gpu">-</b>
+                    </div>
+                </div>
+
+                <button class="btn-action" onclick="adicionarAoCarrinho()">Adicionar ao carrinho</button>
+
+                
+                <div class="trust-icons-bottom">
+                    <div class="trust-item">
+                        <div class="t-icon">🚚</div>
+                        <div class="t-txt">
+                            <span>Frete grátis</span>
+                            <b>1-2 dias</b>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <div class="t-icon">🏠</div>
+                        <div class="t-txt">
+                            <span>Em estoque</span>
+                            <b>Hoje</b>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <div class="t-icon">🛡️</div>
+                        <div class="t-txt">
+                            <span>Garantia</span>
+                            <b>1 ano</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section class="description-box">
+            <h2>Descrição do produto</h2>
+            <p id="prod-desc">Carregando detalhes...</p>
+
+            <div class="specs-list-container">
+                <h3>características:</h3>
+                <ul id="lista-caracteristicas">
+                    
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script src="db.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const p = meusProdutos.find(item => item.id === id);
+
+            if (p) {
+                document.getElementById('prod-nome').innerText = p.nome;
+                document.getElementById('bread-nome').innerText = p.nome;
+                document.getElementById('prod-preco').innerText = `R$ ${p.preco.toLocaleString('pt-br', { minimumFractionDigits: 2 })}`;
+                document.getElementById('prod-desc').innerText = p.descricao;
+                
+                document.getElementById('spec-tela').innerText = p.specs.tela || "-";
+                document.getElementById('spec-cpu').innerText = p.specs.cpu || "-";
+                document.getElementById('spec-cores').innerText = p.specs.cores || "-";
+                document.getElementById('spec-gpu').innerText = p.specs.gpu || "-";
+
+                const listaUl = document.getElementById('lista-caracteristicas');
+                listaUl.innerHTML = "";
+                const caracs = [
+                    p.specs.cpuFull || p.specs.cpu,
+                    p.specs.telaFull || p.specs.tela,
+                    p.specs.gpuFull || p.specs.gpu,
+                    p.specs.armazenamento || "SSD NVMe de alta velocidade",
+                    p.specs.ram || "Memória DDR5",
+                    p.specs.os || "Windows 11 Home"
+                ];
+
+                caracs.forEach(info => {
+                    if(info) {
+                        const li = document.createElement('li');
+                        li.innerText = info;
+                        listaUl.appendChild(li);
+                    }
+                });
+
+                const mainImg = document.getElementById('main-img');
+                if (p.imagens && p.imagens.length > 0) {
+                    mainImg.src = p.imagens[0];
+                    const thumbsContainer = document.getElementById('thumbs');
+                    thumbsContainer.innerHTML = ""; 
+                    p.imagens.forEach(imgUrl => {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imgUrl;
+                        imgElement.className = "thumb-img";
+                        imgElement.onclick = () => mainImg.src = imgUrl;
+                        thumbsContainer.appendChild(imgElement);
+                    });
+                }
+            }
+        });
+
+        function adicionarAoCarrinho() { 
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (id) window.location.href = `carrinho.html?id=${id}`; 
+        }
+    </script>
+</body>
+</html>
